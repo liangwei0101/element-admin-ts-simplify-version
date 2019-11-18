@@ -134,7 +134,7 @@ export const asyncRoutes: RouteConfig[] = [
     ]
   },
   /** when your routing map is too long, you can split it into small modules **/
-  // componentsRouter,
+  componentsRouter,
   {
     path: '*',
     redirect: '/404',
