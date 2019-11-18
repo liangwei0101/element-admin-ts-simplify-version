@@ -10,7 +10,7 @@
     >
       <div class="title-container">
         <h3 class="title">
-          {{ $t('login.title') }}
+          Qbit {{ $t('login.title') }}
         </h3>
         <lang-select class="set-language" />
       </div>
