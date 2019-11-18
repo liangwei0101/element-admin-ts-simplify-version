@@ -21,6 +21,7 @@ class User extends VuexModule implements IUserState {
   public name = ''
   public avatar = ''
   public introduction = ''
+  public phone = ''
   public roles: string[] = []
   public email = ''
 
@@ -54,13 +55,33 @@ class User extends VuexModule implements IUserState {
     this.email = email
   }
 
+  @Mutation
+  private SET_PHONE(phone: string) {
+    this.phone = phone
+  }
+  
+
   @Action
-  public async Login(userInfo: { username: string, password: string}) {
-    let { username, password } = userInfo
-    username = username.trim()
-    const { data } = await login({ username, password })
+  public async Login(userInfo: { email: string, password: string}) {
+    let { email, password } = userInfo
+    email = email.trim()
+    const { data } = await login({ email, password })
     setToken(data.accessToken)
     this.SET_TOKEN(data.accessToken)
+ 
+    // 设置用户信息
+    if (!data.roleAndMenu) {
+      throw Error('GetUserInfo: roles is null !')
+    }
+
+    let roles = []
+    roles.push(data.roleAndMenu.type)
+    const avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
+
+    this.SET_AVATAR(avatar)
+    this.SET_ROLES(roles)
+    this.SET_PHONE(data.phone)
+    this.SET_EMAIL(email)
   }
 
   @Action
@@ -79,14 +100,15 @@ class User extends VuexModule implements IUserState {
     if (!data) {
       throw Error('Verification failed, please Login again.')
     }
-    const { roles, name, avatar, introduction, email } = data.user
+    const { roles, name, introduction, email } = data.user
     // roles must be a non-empty array
     if (!roles || roles.length <= 0) {
       throw Error('GetUserInfo: roles must be a non-null array!')
     }
+
     this.SET_ROLES(roles)
     this.SET_NAME(name)
-    this.SET_AVATAR(avatar)
+
     this.SET_INTRODUCTION(introduction)
     this.SET_EMAIL(email)
   }
