@@ -1,5 +1,10 @@
 export default {
   route: {
+    myMerchant: '我的商户',
+    merchantPool: '商户池',
+    myStatistics: '我的统计',
+    right: '权限',
+    // ------------
     dashboard: '首页',
     documentation: '文档',
     guide: '引导页',

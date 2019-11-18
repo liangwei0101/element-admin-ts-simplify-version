@@ -133,8 +133,73 @@ export const asyncRoutes: RouteConfig[] = [
       }
     ]
   },
+  
   /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
+  // componentsRouter,
+  {
+    path: '/merchantPool',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import(/* webpackChunkName: "permission-page" */ '@/views/qbit-sale/merchantPool/merchantPool.vue'),
+        name: 'MerchantPool',
+        meta: {
+          title: 'merchantPool',
+          icon: 'peoples',
+          roles: ['admin', 'qbitSale'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  {
+    path: '/myMerchant',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import(/* webpackChunkName: "permission-page" */ '@/views/qbit-sale/myMerchant/myMerchant.vue'),
+        name: 'MyMerchant',
+        meta: {
+          title: 'myMerchant',
+          icon: 'people',
+          roles: ['admin', 'qbitSale'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  {
+    path: '/myStatistics',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import(/* webpackChunkName: "permission-page" */ '@/views/qbit-sale/myStatistics/myStatistics.vue'),
+        name: 'MyStatistics',
+        meta: {
+          title: 'myStatistics',
+          icon: 'chart',
+          roles: ['admin', 'qbitSale'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  {
+    path: '/right',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import(/* webpackChunkName: "permission-page" */ '@/views/right/right.vue'),
+        name: 'Dashboard',
+        meta: {
+          title: 'right',
+          icon: 'lock',
+          roles: ['admin', 'qbitSale'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
   {
     path: '*',
     redirect: '/404',
