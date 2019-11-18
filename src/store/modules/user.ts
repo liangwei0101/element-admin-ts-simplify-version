@@ -24,6 +24,7 @@ class User extends VuexModule implements IUserState {
   public phone = ''
   public roles: string[] = []
   public email = ''
+  public pwd = ''
 
   @Mutation
   private SET_TOKEN(token: string) {
@@ -59,6 +60,11 @@ class User extends VuexModule implements IUserState {
   private SET_PHONE(phone: string) {
     this.phone = phone
   }
+
+  @Mutation 
+  private SET_PWD(pwd: string) {
+    this.pwd = pwd
+  }
   
 
   @Action
@@ -67,21 +73,9 @@ class User extends VuexModule implements IUserState {
     email = email.trim()
     const { data } = await login({ email, password })
     setToken(data.accessToken)
-    this.SET_TOKEN(data.accessToken)
- 
-    // 设置用户信息
-    if (!data.roleAndMenu) {
-      throw Error('GetUserInfo: roles is null !')
-    }
-
-    let roles = []
-    roles.push(data.roleAndMenu.type)
-    const avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
-
-    this.SET_AVATAR(avatar)
-    this.SET_ROLES(roles)
-    this.SET_PHONE(data.phone)
     this.SET_EMAIL(email)
+    this.SET_PWD(password)
+    this.SET_TOKEN(data.accessToken)
   }
 
   @Action
@@ -96,21 +90,20 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    const { data } = await getUserInfo({ /* Your params here */ })
+    // 偷个懒，不想改接口了
+    const { data } = await getUserInfo({ email: UserModule.email, password: UserModule.pwd })
     if (!data) {
       throw Error('Verification failed, please Login again.')
     }
-    const { roles, name, introduction, email } = data.user
     // roles must be a non-empty array
-    if (!roles || roles.length <= 0) {
-      throw Error('GetUserInfo: roles must be a non-null array!')
+    if (!data.roleAndMenu) {
+      throw Error('GetUserInfo: roles is null!')
     }
-
+    let roles = []
+    roles.push(data.roleAndMenu.type)
     this.SET_ROLES(roles)
-    this.SET_NAME(name)
-
-    this.SET_INTRODUCTION(introduction)
-    this.SET_EMAIL(email)
+    this.SET_AVATAR('https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+    this.SET_PWD('')
   }
 
   @Action
